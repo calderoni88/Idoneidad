@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examen de Idoneidad CNV Argentina</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azul: #0a2540;
+    --azul-medio: #1a3a5c;
+    --dorado: #c9a84c;
+    --dorado-claro: #e8c97a;
+    --blanco: #f8f6f1;
+    --gris-claro: #eae8e3;
+    --rojo: #c0392b;
+    --verde: #1a6b3a;
+    --texto: #1a1a2e;
+    --sombra: 0 4px 24px rgba(10,37,64,0.13);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--azul);
+    color: var(--blanco);
+    min-height: 100vh;
+    background-image: 
+      radial-gradient(ellipse at 10% 20%, rgba(201,168,76,0.07) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(26,58,92,0.5) 0%, transparent 50%);
+  }
+
+  /* ===== PANTALLA INICIO ===== */
+  #pantalla-inicio {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2rem;
+    animation: fadeIn 0.8s ease;
+  }
+  .logo-cnv {
+    width: 80px; height: 80px; margin-bottom: 1.5rem;
+    background: var(--dorado);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900;
+    color: var(--azul);
+    box-shadow: 0 0 0 8px rgba(201,168,76,0.15);
+  }
+  h1.titulo-principal {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.15;
+    color: var(--blanco);
+    margin-bottom: 0.5rem;
+  }
+  h1.titulo-principal span { color: var(--dorado); }
+  .subtitulo {
+    color: rgba(248,246,241,0.6);
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+  .card-inicio {
+    background: rgba(26,58,92,0.5);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 16px;
+    padding: 2.5rem;
+    max-width: 560px;
+    width: 100%;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(8px);
+  }
+  .info-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;
+  }
+  .info-item {
+    background: rgba(10,37,64,0.5);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+  .info-item .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--dorado);
+    display: block;
+  }
+  .info-item .label { font-size: 0.78rem; color: rgba(248,246,241,0.6); }
+  .btn-primario {
+    width: 100%;
+    padding: 1rem 2rem;
+    background: var(--dorado);
+    color: var(--azul);
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+  }
+  .btn-primario:hover { background: var(--dorado-claro); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.4); }
+  .btn-primario:active { transform: translateY(0); }
+  .aviso {
+    font-size: 0.8rem;
+    color: rgba(248,246,241,0.45);
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* ===== PANTALLA EXAMEN ===== */
+  #pantalla-examen { display: none; min-height: 100vh; padding: 1.5rem; }
+  .header-examen {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 800px; margin: 0 auto 1.5rem;
+    flex-wrap: wrap; gap: 0.75rem;
+  }
+  .header-izq { display: flex; align-items: center; gap: 0.75rem; }
+  .badge-cnv {
+    background: var(--dorado);
+    color: var(--azul);
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 0.85rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+  }
+  .progreso-texto { font-size: 0.88rem; color: rgba(248,246,241,0.65); }
+  .progreso-texto strong { color: var(--dorado); }
+  .contador-tiempo {
+    display: flex; align-items: center; gap: 0.4rem;
+    background: rgba(26,58,92,0.6);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .barra-progreso-wrap {
+    max-width: 800px; margin: 0 auto 1.5rem;
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px; height: 5px;
+    overflow: hidden;
+  }
+  .barra-progreso-fill {
+    height: 100%; background: linear-gradient(90deg, var(--dorado), var(--dorado-claro));
+    border-radius: 100px;
+    transition: width 0.4s ease;
+  }
+
+  .tarjeta-pregunta {
+    max-width: 800px; margin: 0 auto;
+    background: rgba(26,58,92,0.45);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    backdrop-filter: blur(8px);
+    animation: slideIn 0.35s ease;
+  }
+  .num-pregunta {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--dorado);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .texto-pregunta {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    line-height: 1.6;
+    color: var(--blanco);
+    margin-bottom: 1.75rem;
+    font-weight: 400;
+  }
+  .opciones { display: flex; flex-direction: column; gap: 0.7rem; }
+  .opcion {
+    background: rgba(10,37,64,0.5);
+    border: 1.5px solid rgba(201,168,76,0.15);
+    border-radius: 10px;
+    padding: 0.9rem 1.2rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: rgba(248,246,241,0.9);
+    transition: all 0.18s;
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    text-align: left;
+  }
+  .opcion:hover { border-color: var(--dorado); background: rgba(201,168,76,0.08); color: var(--blanco); }
+  .opcion.seleccionada { border-color: var(--dorado); background: rgba(201,168,76,0.15); color: var(--blanco); }
+  .opcion.correcta { border-color: #2ecc71; background: rgba(46,204,113,0.12); color: var(--blanco); }
+  .opcion.incorrecta { border-color: var(--rojo); background: rgba(192,57,43,0.12); color: var(--blanco); }
+  .opcion.mostrar-correcta { border-color: #2ecc71; background: rgba(46,204,113,0.12); }
+  .opcion.bloqueada { cursor: default; }
+  .letra-opcion {
+    width: 22px; height: 22px; min-width: 22px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700;
+    color: var(--dorado);
+    margin-top: 1px;
+  }
+  .opcion.correcta .letra-opcion { background: rgba(46,204,113,0.3); color: #2ecc71; }
+  .opcion.incorrecta .letra-opcion { background: rgba(192,57,43,0.3); color: #e74c3c; }
+  .opcion.mostrar-correcta .letra-opcion { background: rgba(46,204,113,0.3); color: #2ecc71; }
+
+  .feedback {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    display: none;
+  }
+  .feedback.correcto { background: rgba(46,204,113,0.12); border: 1px solid rgba(46,204,113,0.3); color: #a8f0c0; display: block; }
+  .feedback.incorrecto { background: rgba(192,57,43,0.12); border: 1px solid rgba(192,57,43,0.3); color: #f0a8a8; display: block; }
+
+  .nav-pregunta {
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 800px; margin: 1.2rem auto 0;
+    flex-wrap: wrap; gap: 0.75rem;
+  }
+  .btn-sec {
+    padding: 0.65rem 1.5rem;
+    border-radius: 8px;
+    border: 1.5px solid rgba(201,168,76,0.3);
+    background: transparent;
+    color: rgba(248,246,241,0.75);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-sec:hover { border-color: var(--dorado); color: var(--dorado); }
+  .btn-siguiente {
+    padding: 0.7rem 1.8rem;
+    background: var(--dorado);
+    color: var(--azul);
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-siguiente:hover { background: var(--dorado-claro); }
+  .btn-siguiente:disabled { opacity: 0.35; cursor: default; }
+
+  /* ===== PANTALLA RESULTADOS ===== */
+  #pantalla-resultados { display: none; padding: 2rem; min-height: 100vh; animation: fadeIn 0.6s ease; }
+  .resultado-wrap { max-width: 800px; margin: 0 auto; }
+  .resultado-header { text-align: center; margin-bottom: 2.5rem; }
+  .score-circulo {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    position: relative;
+  }
+  .score-circulo.aprobado {
+    background: radial-gradient(circle, rgba(26,107,58,0.3), rgba(26,107,58,0.05));
+    border: 3px solid #2ecc71;
+    box-shadow: 0 0 30px rgba(46,204,113,0.2);
+  }
+  .score-circulo.desaprobado {
+    background: radial-gradient(circle, rgba(192,57,43,0.3), rgba(192,57,43,0.05));
+    border: 3px solid #e74c3c;
+    box-shadow: 0 0 30px rgba(192,57,43,0.2);
+  }
+  .score-num { font-size: 2.8rem; font-weight: 900; line-height: 1; }
+  .score-circulo.aprobado .score-num { color: #2ecc71; }
+  .score-circulo.desaprobado .score-num { color: #e74c3c; }
+  .score-label { font-size: 0.75rem; color: rgba(248,246,241,0.6); margin-top: 0.2rem; }
+  .resultado-titulo { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .resultado-subtitulo { color: rgba(248,246,241,0.6); font-size: 0.95rem; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card {
+    background: rgba(26,58,92,0.4);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 12px;
+    padding: 1.2rem;
+    text-align: center;
+  }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--dorado); }
+  .stat-label { font-size: 0.78rem; color: rgba(248,246,241,0.55); margin-top: 0.2rem; }
+
+  .seccion-errores h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--dorado);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .error-item {
+    background: rgba(192,57,43,0.08);
+    border: 1px solid rgba(192,57,43,0.2);
+    border-left: 3px solid #e74c3c;
+    border-radius: 0 10px 10px 0;
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+  .error-pregunta { font-size: 0.92rem; color: var(--blanco); margin-bottom: 0.6rem; line-height: 1.5; }
+  .error-tu-resp { font-size: 0.82rem; color: #f0a8a8; margin-bottom: 0.3rem; }
+  .error-correcta { font-size: 0.82rem; color: #a8f0c0; }
+  .error-correcta strong { color: #2ecc71; }
+  .error-tu-resp strong { color: #e74c3c; }
+
+  .acciones-finales {
+    display: flex; gap: 1rem; justify-content: center;
+    margin-top: 2.5rem; flex-wrap: wrap;
+  }
+  .sin-errores {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(26,107,58,0.1);
+    border: 1px solid rgba(46,204,113,0.2);
+    border-radius: 12px;
+    color: #a8f0c0;
+    font-size: 1rem;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+
+  @media (max-width: 560px) {
+    .info-grid { grid-template-columns: 1fr 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr 1fr; }
+    .tarjeta-pregunta { padding: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== INICIO ===== -->
+<div id="pantalla-inicio">
+  <div class="logo-cnv">CNV</div>
+  <h1 class="titulo-principal">Examen de <span>Idoneidad</span><br>CNV Argentina</h1>
+  <p class="subtitulo">Comisión Nacional de Valores — Modelo de Práctica</p>
+  <div class="card-inicio">
+    <div class="info-grid">
+      <div class="info-item"><span class="num">60</span><span class="label">Preguntas por examen</span></div>
+      <div class="info-item"><span class="num">300</span><span class="label">Preguntas en el banco</span></div>
+      <div class="info-item"><span class="num">75%</span><span class="label">Para aprobar</span></div>
+      <div class="info-item"><span class="num">90'</span><span class="label">Tiempo estimado</span></div>
+    </div>
+    <button class="btn-primario" onclick="iniciarExamen()">▶ Comenzar Examen</button>
+    <p class="aviso">Las 60 preguntas se seleccionan aleatoriamente del banco cada vez que iniciás</p>
+  </div>
+</div>
+
+<!-- ===== EXAMEN ===== -->
+<div id="pantalla-examen">
+  <div class="header-examen">
+    <div class="header-izq">
+      <span class="badge-cnv">CNV</span>
+      <span class="progreso-texto">Pregunta <strong id="num-actual">1</strong> de <strong>60</strong></span>
+    </div>
+    <div class="contador-tiempo">⏱ <span id="tiempo-display">90:00</span></div>
+  </div>
+  <div class="barra-progreso-wrap">
+    <div class="barra-progreso-fill" id="barra-progreso" style="width:0%"></div>
+  </div>
+  <div class="tarjeta-pregunta" id="tarjeta-pregunta">
+    <div class="num-pregunta" id="label-pregunta">PREGUNTA 1 / 60</div>
+    <div class="texto-pregunta" id="texto-pregunta"></div>
+    <div class="opciones" id="opciones-container"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+  <div class="nav-pregunta">
+    <button class="btn-sec" onclick="irAnterior()" id="btn-anterior">← Anterior</button>
+    <span id="respondidas-texto" style="font-size:0.82rem;color:rgba(248,246,241,0.45)"></span>
+    <button class="btn-siguiente" id="btn-siguiente" onclick="irSiguiente()">Siguiente →</button>
+  </div>
+</div>
+
+<!-- ===== RESULTADOS ===== -->
+<div id="pantalla-resultados">
+  <div class="resultado-wrap">
+    <div class="resultado-header">
+      <div class="score-circulo" id="score-circulo">
+        <span class="score-num" id="score-porcentaje">0%</span>
+        <span class="score-label">Puntaje</span>
+      </div>
+      <div class="resultado-titulo" id="resultado-titulo"></div>
+      <div class="resultado-subtitulo" id="resultado-subtitulo"></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="stat-correctas">0</div><div class="stat-label">Correctas ✓</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-incorrectas">0</div><div class="stat-label">Incorrectas ✗</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-sin-resp">0</div><div class="stat-label">Sin responder</div></div>
+    </div>
+    <div class="seccion-errores">
+      <h3>📋 Revisión de respuestas incorrectas</h3>
+      <div id="lista-errores"></div>
+    </div>
+    <div class="acciones-finales">
+      <button class="btn-sec" onclick="volverInicio()">← Volver al inicio</button>
+      <button class="btn-primario" style="width:auto;padding:0.75rem 2rem;" onclick="iniciarExamen()">↺ Nuevo Examen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// BANCO DE 300 PREGUNTAS — EXAMEN IDONEIDAD CNV
+// =====================================================
+const BANCO_PREGUNTAS = [
+  // --- MERCADO DE CAPITALES GENERAL ---
+  {p:"¿Cuál es la función principal de la Comisión Nacional de Valores (CNV)?",o:["Regular y supervisar los mercados de valores","Fijar el tipo de cambio oficial","Administrar las reservas del Banco Central","Recaudar impuestos nacionales"],c:0},
+  {p:"¿Qué es una acción ordinaria?",o:["Un título de deuda emitido por una empresa","Una parte alícuota del capital social de una empresa con derecho a voto","Un instrumento de renta fija","Un derivado financiero"],c:1},
+  {p:"¿Qué representa un bono corporativo?",o:["Una participación en el capital de la empresa","Una obligación de deuda de la empresa hacia el tenedor","Un contrato de derivados","Una opción de compra"],c:1},
+  {p:"¿Qué es la tasa interna de retorno (TIR)?",o:["La tasa de inflación esperada","La tasa que iguala el valor presente de los flujos futuros con la inversión inicial","La tasa libre de riesgo","La tasa interbancaria"],c:1},
+  {p:"¿Qué significa 'renta fija'?",o:["Instrumentos cuyo rendimiento es fijo e independiente de las condiciones del mercado","Instrumentos que pagan cupones o intereses predeterminados","Acciones que pagan dividendos siempre","Fondos con retorno garantizado"],c:1},
+  {p:"¿Qué es un fondo común de inversión (FCI)?",o:["Un banco estatal de inversión","Un patrimonio indiviso integrado por aportes de múltiples inversores administrado por una sociedad gerente","Una cuenta de ahorro con interés garantizado","Un bono emitido por el Estado"],c:1},
+  {p:"¿Cuál es la diferencia entre mercado primario y secundario?",o:["El mercado primario negocia activos existentes; el secundario emite nuevos","El mercado primario es donde se emiten nuevos valores; el secundario donde se negocian los ya emitidos","No hay diferencia entre ambos","El mercado secundario es menos regulado"],c:1},
+  {p:"¿Qué es el 'spread' en renta fija?",o:["La diferencia entre el precio de compra y venta de un bono","La diferencia de rendimiento entre un bono y la tasa libre de riesgo de referencia","El margen del broker","La volatilidad del bono"],c:1},
+  {p:"¿Qué instrumento permite al tenedor comprar acciones a un precio fijo?",o:["Warrant","Obligación negociable","Cheque de pago diferido","Cedear"],c:0},
+  {p:"¿Qué es el valor nominal de un bono?",o:["El precio de mercado actual","El precio al que fue emitido y sobre el que se calculan los intereses","El precio de rescate anticipado","La suma de todos los cupones"],c:1},
+  {p:"¿Qué es una Obligación Negociable (ON)?",o:["Una acción preferida","Un instrumento de deuda emitido por empresas privadas","Un título público nacional","Un contrato de futuros"],c:1},
+  {p:"¿Cuál es el organismo de supervisión bancaria en Argentina?",o:["CNV","Banco Central de la República Argentina (BCRA)","Ministerio de Economía","AFIP"],c:1},
+  {p:"¿Qué mide la duration de un bono?",o:["Su tasa de interés nominal","La sensibilidad del precio del bono ante cambios en la tasa de interés","Su calificación crediticia","Su liquidez en el mercado"],c:1},
+  {p:"¿Qué es el 'precio limpio' de un bono?",o:["El precio sin incluir los intereses corridos","El precio después de impuestos","El precio en el mercado primario","El valor de rescate"],c:0},
+  {p:"¿Qué es el 'precio sucio' de un bono?",o:["El precio con impuestos incluidos","El precio que incluye los intereses corridos desde el último cupón","El precio con comisiones","El precio en el mercado negro"],c:1},
+  {p:"¿Qué es la curva de rendimientos?",o:["Un gráfico de precios históricos de acciones","La relación entre el rendimiento y el plazo de vencimiento de bonos similares","La evolución del índice Merval","El spread entre tasa activa y pasiva"],c:1},
+  {p:"¿Qué significa una curva de rendimientos invertida?",o:["Las tasas de corto plazo son mayores que las de largo plazo","Las tasas de largo plazo son mayores que las de corto","Todos los bonos rinden lo mismo","El mercado está ilíquido"],c:0},
+  {p:"¿Qué es el Índice Merval?",o:["El índice de precios al consumidor","El principal índice bursátil de la Bolsa de Buenos Aires","Un índice de bonos soberanos","El índice de tipo de cambio"],c:1},
+  {p:"¿Cuál es la función de una Cámara de Compensación?",o:["Emitir títulos públicos","Garantizar y liquidar las operaciones del mercado","Otorgar créditos a empresas","Regular los fondos de inversión"],c:1},
+  {p:"¿Qué es el riesgo de contraparte?",o:["El riesgo de que suba la tasa de interés","El riesgo de que la otra parte de una transacción no cumpla con sus obligaciones","El riesgo cambiario","El riesgo de inflación"],c:1},
+  // --- INSTRUMENTOS FINANCIEROS ---
+  {p:"¿Qué son los CEDEARs?",o:["Certificados que representan acciones de empresas extranjeras, negociables en Argentina","Bonos del Tesoro de EE.UU.","Fondos de inversión internacionales","Derivados sobre divisas"],c:0},
+  {p:"¿Cuál es la principal diferencia entre acciones ordinarias y preferidas?",o:["Las preferidas tienen mayor liquidez","Las preferidas tienen prioridad en el cobro de dividendos pero generalmente no tienen voto","Las ordinarias no pagan dividendos","No hay diferencia práctica"],c:1},
+  {p:"¿Qué es un cheque de pago diferido (CPD)?",o:["Un cheque postdatado negociable en el mercado de capitales","Un bono del Estado","Una opción financiera","Un contrato de futuros"],c:0},
+  {p:"¿Qué son las Letras del Tesoro (LETES)?",o:["Instrumentos de deuda privada","Títulos de corto plazo emitidos por el Tesoro Nacional","Acciones preferidas del Estado","Fondos de inversión estatales"],c:1},
+  {p:"¿Qué es un fideicomiso financiero?",o:["Una cuenta bancaria especial","Un contrato por el cual bienes o derechos son transmitidos a un fiduciario para ser administrados en beneficio de los fideicomisarios","Una sociedad de bolsa","Un tipo de fondo de inversión cerrado"],c:1},
+  {p:"¿Qué mide el índice de Sharpe?",o:["La volatilidad total del portafolio","El rendimiento ajustado por riesgo de una inversión respecto a la tasa libre de riesgo","La correlación entre activos","El beta de una cartera"],c:1},
+  {p:"¿Qué representa el coeficiente Beta?",o:["La volatilidad absoluta de un activo","La sensibilidad de un activo frente a los movimientos del mercado","La tasa de crecimiento de dividendos","El apalancamiento financiero"],c:1},
+  {p:"¿Qué es el 'mercado over the counter' (OTC)?",o:["Un mercado electrónico oficial","Un mercado donde las operaciones se realizan directamente entre partes, sin pasar por una bolsa organizada","El mercado de divisas oficial","Un mercado de materias primas"],c:1},
+  {p:"¿Qué es una opción de compra (call)?",o:["La obligación de comprar un activo a un precio dado","El derecho (no la obligación) de comprar un activo a un precio determinado antes de una fecha","Un contrato de futuros de compra","Un bono convertible"],c:1},
+  {p:"¿Qué es una opción de venta (put)?",o:["La obligación de vender un activo","El derecho (no la obligación) de vender un activo a un precio determinado antes de una fecha","Un contrato de futuros de venta","Una acción preferida"],c:1},
+  {p:"¿Qué es un contrato de futuros?",o:["Un acuerdo de compra hoy con entrega inmediata","Un acuerdo de comprar o vender un activo en una fecha futura a un precio acordado hoy","Una opción con vencimiento a futuro","Un bono a largo plazo"],c:1},
+  {p:"¿Cuál es la diferencia entre futuros y forwards?",o:["No hay diferencia","Los futuros se negocian en mercados organizados y tienen estandarización; los forwards son contratos privados OTC","Los forwards son más líquidos","Los futuros no tienen cámara compensadora"],c:1},
+  {p:"¿Qué es un swap de tasas de interés?",o:["El intercambio de pagos de tasas fija por variable (o viceversa) entre dos partes","Un contrato de opciones sobre tasas","La compra de bonos a tasa fija","Un instrumento de cobertura cambiaria"],c:0},
+  {p:"¿Cuál es el riesgo principal de invertir en bonos en pesos a tasa fija ante inflación?",o:["Riesgo de crédito","Riesgo de tasa: si sube la inflación, el rendimiento real cae y el precio del bono baja","Riesgo de liquidez","Riesgo cambiario"],c:1},
+  {p:"¿Qué son los bonos CER?",o:["Bonos ajustados por el Coeficiente de Estabilización de Referencia (inflación)","Bonos emitidos por el Banco Central","Bonos con tasa variable","Bonos en dólares"],c:0},
+  {p:"¿Qué es un bono dual?",o:["Un bono que paga en dos monedas","Un bono que ofrece al inversor la opción de cobrar ajuste por CER o por tasa variable, lo que resulte mayor","Un bono con dos fechas de vencimiento","Un bono con dos emisores"],c:1},
+  {p:"¿Qué es el riesgo de reinversión?",o:["El riesgo de que el emisor no pague","El riesgo de no poder reinvertir los cupones recibidos a la misma tasa","El riesgo de tipo de cambio","El riesgo de volatilidad del mercado"],c:1},
+  {p:"¿Qué son los bonos 'step-up'?",o:["Bonos cuya tasa de interés aumenta progresivamente en el tiempo","Bonos que aumentan su valor nominal","Bonos con opcionalidad de rescate anticipado","Bonos indexados al dólar"],c:0},
+  {p:"¿Qué representa el 'Accrued Interest' o interés corrido?",o:["Los intereses vencidos no cobrados","Los intereses devengados desde el último pago de cupón hasta la fecha de liquidación","El interés total del bono","Las comisiones del agente"],c:1},
+  {p:"¿Cuál es el objetivo de la diversificación de cartera?",o:["Maximizar el rendimiento esperado","Reducir el riesgo no sistemático mediante la combinación de activos con baja correlación","Concentrar en los mejores activos","Eliminar todo tipo de riesgo"],c:1},
+  // --- REGULACIÓN CNV ---
+  {p:"¿Qué ley regula el mercado de capitales en Argentina?",o:["Ley 26.831","Ley 24.452","Ley 25.065","Ley 23.928"],c:0},
+  {p:"¿Cuál es el principal deber del agente en la relación con el cliente?",o:["Maximizar sus propias comisiones","Actuar con lealtad y diligencia en el mejor interés del cliente","Informar solo lo que el cliente pregunta","Operar de forma discrecional sin consultar"],c:1},
+  {p:"¿Qué significa el principio 'Know Your Customer' (KYC)?",o:["Conocer los productos del mercado","Identificar y conocer al cliente para cumplir con normas AML y evaluar su perfil de riesgo","Informar al cliente sobre el mercado","Auditar las operaciones del cliente"],c:1},
+  {p:"¿Qué es la idoneidad del cliente (suitability)?",o:["La capacidad del cliente para pagar comisiones","La obligación del agente de asegurarse que las inversiones recomendadas sean adecuadas para el perfil del cliente","La verificación de la identidad del cliente","El análisis de riesgo del mercado"],c:1},
+  {p:"¿Qué se entiende por 'conflicto de interés' en el mercado de valores?",o:["Una disputa legal entre inversores","Cuando el interés propio del agente puede ir en detrimento del interés del cliente","Cuando dos clientes compiten por el mismo activo","Una regulación de la CNV"],c:1},
+  {p:"¿Qué es la 'manipulación de mercado'?",o:["Una estrategia legítima de trading","Prácticas que distorsionan artificialmente los precios o volúmenes de los instrumentos financieros","La compra de grandes volúmenes de acciones","El arbitraje entre mercados"],c:1},
+  {p:"¿Qué es el uso de 'información privilegiada' (insider trading)?",o:["Usar análisis fundamental para invertir","Operar en el mercado usando información material no pública para obtener ventaja","Recibir recomendaciones de analistas","Invertir basándose en noticias públicas"],c:1},
+  {p:"¿Quién puede ser considerado 'iniciado' según la regulación?",o:["Solo los directivos de empresas","Cualquier persona que acceda a información material y no pública sobre una empresa","Solo los empleados del emisor","Solo los accionistas mayoritarios"],c:1},
+  {p:"¿Qué es el front-running?",o:["Ejecutar órdenes de clientes antes que la propia empresa ante info privilegiada","Colocar órdenes propias antes de ejecutar una orden de cliente, sabiendo que esta moverá el precio","Negociar en mercados internacionales","Realizar operaciones de arbitraje"],c:1},
+  {p:"¿Qué sanciones puede aplicar la CNV?",o:["Solo multas pecuniarias","Apercibimiento, multas, suspensión o inhabilitación para operar en el mercado","Solo inhabilitación permanente","Solo advertencias verbales"],c:1},
+  {p:"¿Qué es el lavado de activos (AML)?",o:["El proceso de inversión en el exterior","El proceso de ocultar el origen ilícito de fondos para que parezcan legítimos","La evasión fiscal","El financiamiento de proyectos en el exterior"],c:1},
+  {p:"¿Cuáles son las tres etapas del lavado de activos?",o:["Recepción, procesamiento, distribución","Colocación, estratificación e integración","Entrada, movimiento y salida","Captación, inversión y retiro"],c:1},
+  {p:"¿Qué es una Persona Expuesta Políticamente (PEP)?",o:["Un funcionario público que por su cargo tiene mayor riesgo de estar implicado en lavado o corrupción","Un cliente con alto patrimonio","Un inversor extranjero","Un empleado de banco"],c:0},
+  {p:"¿Qué es el Reporte de Operaciones Sospechosas (ROS)?",o:["Un informe de rentabilidad del cliente","El reporte que deben hacer los sujetos obligados ante la UIF cuando detectan operaciones inusuales","Un reporte de fin de año para la AFIP","Un informe de auditoría interna"],c:1},
+  {p:"¿Qué organismo recibe los reportes de operaciones sospechosas en Argentina?",o:["AFIP","UIF (Unidad de Información Financiera)","CNV","BCRA"],c:1},
+  {p:"¿Qué es el financiamiento del terrorismo?",o:["El financiamiento de grupos políticos","Proveer fondos a personas u organizaciones para llevar a cabo actos terroristas","La financiación de exportaciones","El financiamiento de obras públicas"],c:1},
+  {p:"¿Qué es un Agente de Liquidación y Compensación (ALyC)?",o:["Un agente que solo asesora","Entidad habilitada por la CNV para intervenir en la liquidación y compensación de operaciones del mercado","Un fondo de inversión","Un emisor de títulos"],c:1},
+  {p:"¿Qué es un Agente de Negociación?",o:["Solo un intermediario de bonos","Persona física o jurídica habilitada para la compraventa de valores negociables en nombre de terceros","Un emisor privado","Un fondo común de inversión"],c:1},
+  {p:"¿Qué debe incluir el legajo del cliente?",o:["Solo el DNI","Documentación que acredite identidad, origen de fondos, perfil de riesgo y objetivos de inversión","Solo los extractos de cuenta","Solo la firma del contrato"],c:1},
+  {p:"¿Qué es la 'diligencia debida reforzada'?",o:["El proceso estándar de KYC","Un procedimiento más exhaustivo que se aplica a clientes de mayor riesgo como PEPs","La auditoría interna anual","El proceso de apertura de cuenta básico"],c:1},
+  // --- ANÁLISIS FUNDAMENTAL ---
+  {p:"¿Qué analiza el análisis fundamental de acciones?",o:["Los patrones de precios históricos","Los estados financieros, el modelo de negocio y el entorno económico para determinar el valor intrínseco de una empresa","El volumen de operaciones","Los indicadores técnicos"],c:1},
+  {p:"¿Qué indica el ratio P/E (Price to Earnings)?",o:["La rentabilidad sobre el patrimonio","Cuántas veces el precio de la acción contiene las ganancias por acción","La deuda sobre el capital","El dividendo por acción"],c:1},
+  {p:"¿Qué es el EBITDA?",o:["Earnings Before Interest, Taxes, Depreciation and Amortization — una medida de rentabilidad operativa","El resultado neto de la empresa","La deuda financiera neta","El capital de trabajo"],c:0},
+  {p:"¿Qué mide el ratio Precio/Valor Libro (P/BV)?",o:["La relación entre el precio de mercado y el valor contable por acción","La rentabilidad sobre activos","El crecimiento de ventas","La deuda sobre patrimonio"],c:0},
+  {p:"¿Qué es el ROE (Return on Equity)?",o:["Rentabilidad sobre activos totales","Rentabilidad sobre el patrimonio neto: utilidad neta / patrimonio","Retorno sobre la inversión total","Margen operativo"],c:1},
+  {p:"¿Qué es el flujo de caja libre (FCF)?",o:["La caja en el balance","El efectivo generado por la operación menos las inversiones en capital (CAPEX)","Las ganancias contables","El EBITDA ajustado"],c:1},
+  {p:"¿Qué es la tasa de descuento en valuación de empresas?",o:["La tasa de inflación","La tasa que refleja el costo de capital y el riesgo, usada para traer flujos futuros a valor presente","La tasa libre de riesgo solamente","La tasa pasiva de los bancos"],c:1},
+  {p:"¿Qué significa que una acción cotiza con un descuento respecto a su valor intrínseco?",o:["Que la empresa tiene problemas financieros","Que el precio de mercado es menor al valor estimado por el analista, lo que puede representar una oportunidad","Que la acción tiene baja liquidez","Que el dividendo es bajo"],c:1},
+  {p:"¿Qué es el análisis 'bottom-up'?",o:["Comenzar por el análisis macroeconómico y bajar a sectores y empresas","Comenzar por el análisis de empresas individuales y luego ver el contexto macro","Analizar solo balances contables","Analizar solo indicadores técnicos"],c:1},
+  {p:"¿Qué es el análisis 'top-down'?",o:["Comenzar por el análisis de empresas individuales","Comenzar por el análisis macroeconómico, luego sectorial y finalmente la empresa individual","Analizar los precios históricos","Evaluar el management de las empresas"],c:1},
+  // --- ANÁLISIS TÉCNICO ---
+  {p:"¿En qué se basa el análisis técnico?",o:["En los estados financieros de las empresas","En el estudio de patrones de precios y volúmenes históricos para predecir movimientos futuros","En las declaraciones de los directivos","En los indicadores macroeconómicos"],c:1},
+  {p:"¿Qué es un nivel de soporte en análisis técnico?",o:["Un nivel de precios donde la demanda tiende a frenar la caída","Un nivel de precios donde la oferta supera a la demanda","La media móvil del precio","El precio mínimo histórico"],c:0},
+  {p:"¿Qué es un nivel de resistencia?",o:["Un nivel de precios donde la demanda es fuerte","Un nivel de precios donde la oferta tiende a frenar el alza","El promedio del precio","El precio máximo histórico"],c:1},
+  {p:"¿Qué es una media móvil?",o:["El precio promedio de un activo en un período determinado, actualizado continuamente","El precio máximo del mes","La diferencia entre máximo y mínimo","El volumen promedio"],c:0},
+  {p:"¿Qué indica el indicador RSI?",o:["El volumen relativo de operaciones","El momentum del precio: mide si un activo está sobrecomprado o sobrevendido","La tendencia de largo plazo","La volatilidad del mercado"],c:1},
+  {p:"¿Qué es el MACD?",o:["Un indicador de volumen","Un indicador de momentum que muestra la diferencia entre dos medias móviles exponenciales","Un indicador de volatilidad","Un indicador de amplitud de mercado"],c:1},
+  {p:"¿Qué es una vela japonesa (candlestick)?",o:["Un gráfico de barras convencional","Una representación gráfica del precio de apertura, máximo, mínimo y cierre de un período","Un indicador de tendencia","Un oscilador de mercado"],c:1},
+  {p:"¿Qué indica una vela 'doji'?",o:["Una fuerte tendencia alcista","Indecisión del mercado: el precio cierra cerca de donde abrió","Una ruptura de soporte","Alto volumen de operaciones"],c:1},
+  {p:"¿Qué es el patrón 'cabeza y hombros'?",o:["Un patrón de continuación alcista","Un patrón de reversión que señala el posible fin de una tendencia alcista","Un patrón de volumen","Un indicador de medias móviles"],c:1},
+  {p:"¿Qué son las Bandas de Bollinger?",o:["Líneas de soporte y resistencia fijas","Bandas que representan ±2 desviaciones estándar alrededor de una media móvil, midiendo volatilidad","Indicadores de volumen","Promedios de largo plazo"],c:1},
+  // --- RIESGO Y PORTAFOLIO ---
+  {p:"¿Qué es el riesgo sistemático?",o:["El riesgo específico de una empresa","El riesgo inherente al mercado en general, no diversificable","El riesgo de tasa de interés","El riesgo cambiario"],c:1},
+  {p:"¿Qué es el riesgo no sistemático?",o:["El riesgo del mercado global","El riesgo específico de un activo o empresa que puede reducirse mediante diversificación","El riesgo político","El riesgo macroeconómico"],c:1},
+  {p:"¿Qué es la frontera eficiente de Markowitz?",o:["Un conjunto de portafolios que maximizan el retorno para cada nivel de riesgo","El portafolio con mayor rendimiento del mercado","El índice de referencia del mercado","El portafolio sin riesgo"],c:0},
+  {p:"¿Qué postula el Modelo CAPM?",o:["Que el rendimiento esperado de un activo está relacionado con su riesgo sistemático (beta)","Que todos los activos tienen el mismo rendimiento","Que solo importa la diversificación","Que el mercado siempre es ineficiente"],c:0},
+  {p:"¿Qué es el Value at Risk (VaR)?",o:["El valor máximo de la inversión","La pérdida máxima esperada de un portafolio con cierto nivel de confianza en un período dado","El rendimiento esperado","La desviación estándar de los retornos"],c:1},
+  {p:"¿Qué es la correlación entre activos y su rol en diversificación?",o:["Siempre es positiva y ayuda a concentrar el riesgo","Cuando es baja o negativa, la combinación de activos reduce el riesgo total de la cartera","No tiene relevancia para la diversificación","Solo importa para activos de renta fija"],c:1},
+  {p:"¿Qué es el 'asset allocation' o asignación de activos?",o:["La compra de activos individuales","La distribución de la inversión entre distintas clases de activos (acciones, bonos, efectivo, etc.)","La selección del mejor activo","La estrategia de timing del mercado"],c:1},
+  {p:"¿Qué es el rebalanceo de cartera?",o:["La venta total de la cartera","El ajuste periódico de la cartera para volver a los pesos objetivo de cada activo","La reinversión de dividendos","El cambio de estrategia de inversión"],c:1},
+  {p:"¿Cuál es el perfil de riesgo 'conservador'?",o:["Busca máximo rendimiento sin importar el riesgo","Prioriza la preservación del capital con baja tolerancia a pérdidas","Invierte todo en acciones","Busca rendimientos superiores al mercado"],c:1},
+  {p:"¿Cuál es el perfil de riesgo 'agresivo'?",o:["Invierte solo en plazos fijos","Alta tolerancia al riesgo, busca maximizar el rendimiento a largo plazo aceptando mayor volatilidad","Prioriza la liquidez","Invierte solo en renta fija"],c:1},
+  // --- MACRO Y CONTEXTO ---
+  {p:"¿Qué es la tasa de política monetaria?",o:["La tasa de inflación objetivo","La tasa de interés de referencia que fija el Banco Central para influir en las condiciones financieras","La tasa activa de los bancos comerciales","La tasa de los bonos del Tesoro"],c:1},
+  {p:"¿Qué es la inflación?",o:["La caída general del nivel de precios","El aumento sostenido y generalizado del nivel de precios de una economía","La suba del tipo de cambio","El crecimiento del PBI"],c:1},
+  {p:"¿Qué es el riesgo país?",o:["El riesgo de invertir en empresas locales","La diferencia de rendimiento entre los bonos soberanos de un país y los bonos del Tesoro de EE.UU. de igual plazo","La calificación crediticia del gobierno","La deuda externa total"],c:1},
+  {p:"¿Qué es el tipo de cambio?",o:["El precio de un activo financiero","El precio de una moneda expresado en términos de otra","La tasa de inflación esperada","La tasa de interés internacional"],c:1},
+  {p:"¿Qué significa 'devaluación'?",o:["El aumento del valor de la moneda local frente a divisas extranjeras","La disminución del valor de la moneda local frente a divisas extranjeras","La reducción de la deuda pública","La baja de tasas de interés"],c:1},
+  {p:"¿Qué impacto tiene una suba de tasas de interés sobre los bonos de tasa fija?",o:["Sus precios suben","Sus precios bajan (relación inversa entre precio y tasa)","No tiene impacto","Sus precios se mantienen estables"],c:1},
+  {p:"¿Qué es la política fiscal?",o:["La política del Banco Central sobre tasas de interés","El manejo del gasto público y los impuestos por parte del gobierno","La regulación del sector financiero","La política cambiaria"],c:1},
+  {p:"¿Qué es el PBI (Producto Bruto Interno)?",o:["El valor total de las exportaciones","El valor total de bienes y servicios producidos en un país en un período","La deuda pública total","El gasto del gobierno"],c:1},
+  {p:"¿Qué son los 'bonos verdes'?",o:["Bonos con tasa variable","Bonos cuyos fondos se destinan exclusivamente a proyectos con impacto ambiental positivo","Bonos del Estado en pesos","Bonos indexados al dólar"],c:1},
+  {p:"¿Qué es el mercado cambiario desdoblado en Argentina?",o:["Un único mercado oficial de divisas","La coexistencia de distintos tipos de cambio (oficial, dólar MEP, CCL, blue) con diferentes cotizaciones","El mercado de futuros de dólar","El mercado interbancario"],c:1},
+  // --- ÉTICA Y CONDUCTA ---
+  {p:"¿Qué implica el deber fiduciario del asesor financiero?",o:["Actuar en su propio beneficio","Actuar siempre en el mejor interés del cliente, con lealtad y transparencia","Cumplir solo con la regulación mínima","Informar al cliente cuando convenga"],c:1},
+  {p:"¿Cuándo debe revelar un conflicto de interés el agente?",o:["Solo si el cliente lo solicita","Siempre, de forma oportuna y antes de realizar la operación","Después de cerrada la operación","Solo en las reuniones anuales de revisión"],c:1},
+  {p:"¿Qué es el 'churning'?",o:["Una estrategia de inversión legítima","La rotación excesiva de la cartera del cliente con el propósito de generar comisiones para el agente","La diversificación de portafolio","El rebalanceo periódico"],c:1},
+  {p:"¿Qué obligación tiene el agente respecto a la confidencialidad del cliente?",o:["Puede compartir información con terceros libremente","Debe mantener la confidencialidad de la información del cliente salvo obligaciones legales","Solo debe guardar secreto sobre los montos","No existe tal obligación legal"],c:1},
+  {p:"¿Qué es la 'mejor ejecución' (best execution)?",o:["Realizar la operación al precio más bajo siempre","La obligación de ejecutar las órdenes del cliente en las condiciones más favorables posibles considerando precio, velocidad y probabilidad de ejecución","Ejecutar primero las órdenes de mayor monto","Operar solo en el mercado más grande"],c:1},
+  {p:"¿Qué es la transparencia en el mercado de capitales?",o:["La obligación de publicar precios en tiempo real","El principio de que la información relevante sea pública, accesible y oportuna para todos los participantes","La eliminación de comisiones","La regulación de las calificadoras"],c:1},
+  {p:"¿Qué es el régimen de información periódica de los emisores?",o:["La obligación de pagar dividendos","La obligación de los emisores de informar regularmente su situación financiera y hechos relevantes a la CNV y al público","La obligación de auditoría interna","El régimen de notificación de operaciones"],c:1},
+  {p:"¿Qué es un 'hecho relevante' para un emisor?",o:["Cualquier evento de la empresa","Un evento que pueda afectar significativamente el precio de los valores negociables del emisor y debe ser informado de inmediato","Solo los resultados anuales","Los cambios de empleados de nivel medio"],c:1},
+  {p:"¿Qué es la responsabilidad civil del agente?",o:["Solo una sanción de la CNV","La obligación de reparar los daños y perjuicios causados al cliente por negligencia o incumplimiento de deberes","Solo aplica ante fraude intencional","No existe en el mercado de capitales argentino"],c:1},
+  {p:"¿Qué es la prescripción en materia sancionatoria de la CNV?",o:["No existe prescripción","El plazo dentro del cual la CNV puede iniciar acciones sancionatorias, pasado el cual prescribe la acción","El proceso de cancelación de licencia","La renovación de la habilitación"],c:1},
+  // --- INSTRUMENTOS ADICIONALES ---
+  {p:"¿Qué es un Fondo Común de Inversión Cerrado (FCIC)?",o:["Un FCI que emite cuotapartes ilimitadas","Un FCI con un número fijo de cuotapartes que cotizan en bolsa, generalmente orientado a activos ilíquidos","Un fondo de inversión garantizado","Un fondo que solo invierte en bonos"],c:1},
+  {p:"¿Qué es el dólar MEP (Mercado Electrónico de Pagos)?",o:["El tipo de cambio oficial","El tipo de cambio implícito que surge de comprar un bono en pesos y venderlo en dólares en el mercado local","El tipo de cambio del BCRA","El dólar de las exportaciones"],c:1},
+  {p:"¿Qué es el Contado Con Liqui (CCL)?",o:["Una operación de plazo fijo","El tipo de cambio implícito que surge de comprar un bono/acción en pesos en Argentina y venderlo en el exterior en dólares","El mercado de contado de dólar oficial","Una operación de recompra"],c:1},
+  {p:"¿Qué es una calificación crediticia?",o:["El precio de un bono","Una evaluación de la capacidad y voluntad de pago de un emisor emitida por una agencia calificadora (S&P, Moody's, Fitch)","El rendimiento esperado de un bono","La duración de un bono"],c:1},
+  {p:"¿Qué significa un bono 'Investment Grade'?",o:["Un bono con rendimiento garantizado","Un bono con calificación crediticia de alta calidad (BBB- o superior en S&P), considerado de bajo riesgo","Un bono emitido por el gobierno","Un bono de corto plazo"],c:1},
+  {p:"¿Qué es un bono 'High Yield' o 'junk bond'?",o:["Un bono con alta calificación","Un bono con calificación inferior a Investment Grade, mayor riesgo de crédito y mayor rendimiento","Un bono de gobierno","Un bono indexado a la inflación"],c:1},
+  {p:"¿Qué es el 'haircut' en operaciones de pase (repos)?",o:["Una comisión del broker","El descuento aplicado al valor del colateral en una operación de pase, para reducir el riesgo de crédito","El costo de la operación","La diferencia entre precio sucio y limpio"],c:1},
+  {p:"¿Qué es una operación de caución bursátil?",o:["Una venta a plazo de acciones","Una operación de préstamo de fondos garantizada por valores negociables, realizada en el mercado bursátil","Un contrato de futuros","Una operación de compra a término"],c:1},
+  {p:"¿Qué es el plazo de liquidación T+2?",o:["Las operaciones se liquidan 2 minutos después","Las operaciones se liquidan 2 días hábiles después de su concertación","Las operaciones se liquidan el mismo día","Las operaciones se pagan en 2 cuotas"],c:1},
+  {p:"¿Qué es la liquidez de un activo?",o:["Su rentabilidad","La facilidad con que puede convertirse en efectivo sin afectar significativamente su precio","Su nivel de riesgo","Su calificación crediticia"],c:1},
+  // --- MÁS PREGUNTAS ---
+  {p:"¿Qué es el mercado de dinero?",o:["El mercado de acciones de corto plazo","El mercado donde se negocian instrumentos de corto plazo y alta liquidez como letras, pases y cauciones","El mercado inmobiliario","El mercado de derivados"],c:1},
+  {p:"¿Qué es el apalancamiento financiero?",o:["La diversificación de cartera","El uso de deuda o derivados para amplificar la posición en un activo, aumentando tanto las ganancias potenciales como las pérdidas","La reducción de riesgo mediante cobertura","La reinversión de dividendos"],c:1},
+  {p:"¿Qué es una posición 'larga' en un activo?",o:["Haber vendido el activo","Ser propietario del activo, apostando a que su precio suba","Tener una opción de venta","Estar apalancado en sentido bajista"],c:1},
+  {p:"¿Qué es una posición 'corta' (short)?",o:["Haber comprado el activo","Haber vendido un activo que no se posee, esperando recomprarlo a menor precio","Una inversión a corto plazo","Una caución bursátil"],c:1},
+  {p:"¿Qué es el costo de carry?",o:["El costo de almacenamiento de commodities","El costo neto de mantener una posición en el tiempo (tasa de interés menos ingresos por dividendos o cupones)","La comisión del agente","El costo de conversión de moneda"],c:1},
+  {p:"¿Qué son los mercados eficientes según Fama?",o:["Mercados donde solo los profesionales pueden ganar","Mercados donde los precios reflejan toda la información disponible, haciendo imposible obtener rendimientos superiores de forma consistente","Mercados sin regulación","Mercados con alta liquidez"],c:1},
+  {p:"¿Qué es el 'benchmark' de un portafolio?",o:["El rendimiento máximo posible","El índice o cartera de referencia contra el que se compara el desempeño del portafolio","El rendimiento histórico","El portafolio de menor riesgo"],c:1},
+  {p:"¿Qué es el tracking error?",o:["El error de ejecución de órdenes","La desviación del rendimiento de un portafolio respecto a su benchmark","La diferencia entre precio de compra y venta","El error en la liquidación"],c:1},
+  {p:"¿Qué es el alfa de un portafolio?",o:["El riesgo sistemático","El rendimiento adicional obtenido por encima del benchmark ajustado por riesgo","La beta del portafolio","El VaR del portafolio"],c:1},
+  {p:"¿Qué es el 'drawdown máximo'?",o:["La pérdida en un solo día","La mayor caída desde un máximo hasta el mínimo subsiguiente en el período analizado","La volatilidad anualizada","El VaR al 99%"],c:1},
+  {p:"¿Qué son los dividendos?",o:["Los intereses de un bono","La parte de las utilidades de una empresa que se distribuye a los accionistas","El rescate anticipado de un bono","Las comisiones del agente"],c:1},
+  {p:"¿Qué es el 'ex-dividendo'?",o:["El momento en que la empresa declara el dividendo","La fecha a partir de la cual el comprador de una acción ya no tiene derecho al próximo dividendo","El pago efectivo del dividendo","La reinversión del dividendo"],c:1},
+  {p:"¿Qué es una acción 'growth'?",o:["Una acción de alta capitalización","Una acción de empresa con alto potencial de crecimiento, generalmente con P/E elevado y bajos o nulos dividendos","Una acción de empresa madura que paga dividendos altos","Una acción de empresa en crisis"],c:1},
+  {p:"¿Qué es una acción 'value'?",o:["Una acción de empresas tecnológicas","Una acción que cotiza por debajo de su valor intrínseco estimado, con bajos ratios de valoración","Una acción de alto crecimiento","Una acción sin dividendos"],c:1},
+  {p:"¿Qué es el 'market cap' (capitalización de mercado)?",o:["El volumen diario negociado","El precio de la acción multiplicado por la cantidad total de acciones en circulación","El patrimonio neto de la empresa","Las ganancias anuales"],c:1},
+  {p:"¿Qué es la OPV (Oferta Pública de Venta)?",o:["Una operación privada entre accionistas","La venta de acciones existentes de una empresa al público en general, generalmente cuando accionistas venden su participación","La emisión de nuevas acciones","Un rescate de bonos"],c:1},
+  {p:"¿Qué es la IPO?",o:["Una operación de rescate de bonos","La primera oferta pública de acciones de una empresa que sale a cotizar en bolsa","Una oferta de obligaciones negociables","Una operación de fusión"],c:1},
+  {p:"¿Qué es el 'book building'?",o:["La construcción del balance contable","El proceso de determinación del precio de emisión en una IPO, recolectando intenciones de compra de inversores institucionales","La elaboración del prospecto de emisión","El proceso de calificación crediticia"],c:1},
+  {p:"¿Qué es el prospecto de emisión?",o:["El contrato entre el emisor y los inversores","El documento que describe las características del instrumento a emitir y la información financiera relevante del emisor","El informe de calificación crediticia","El contrato de colocación"],c:1},
+  {p:"¿Qué es un colocador en una emisión?",o:["El auditor de la emisión","La entidad financiera o agente que distribuye los valores entre los inversores en el mercado primario","El regulador de la emisión","El fiduciario"],c:1},
+  {p:"¿Qué es el 'underwriting'?",o:["La calificación de un emisor","El compromiso de un banco o agente de garantizar la colocación de una emisión, pudiendo quedarse con los títulos no colocados","La auditoría de los estados financieros","La custodia de los títulos"],c:1},
+  {p:"¿Qué es una fusión de empresas?",o:["La escisión de una empresa en dos","La unión de dos o más empresas en una sola entidad","La compra de activos de otra empresa","Una joint venture"],c:1},
+  {p:"¿Qué es una adquisición hostil?",o:["Una compra amigable acordada con el directorio","La toma de control de una empresa sin el acuerdo de su directorio, mediante oferta directa a los accionistas","Una fusión por absorción","Una reestructuración de deuda"],c:1},
+  {p:"¿Qué es la OPA (Oferta Pública de Adquisición)?",o:["Una oferta de venta de bonos","Una oferta pública para adquirir acciones de una empresa, generalmente con una prima sobre el precio de mercado","Una oferta de recompra de bonos","Una oferta primaria de acciones"],c:1},
+  {p:"¿Qué es el arbitraje?",o:["Una estrategia especulativa de alto riesgo","La compra y venta simultánea de un mismo activo o equivalente en mercados diferentes para aprovechar diferencias de precio","Una operación de cobertura de riesgo","Una estrategia de largo plazo"],c:1},
+  {p:"¿Qué son las materias primas (commodities) financieras?",o:["Solo metales preciosos","Bienes homogéneos como granos, metales, energía, sobre los que se construyen contratos financieros","Monedas extranjeras","Índices bursátiles"],c:1},
+  {p:"¿Qué es el 'roll over' de futuros?",o:["El vencimiento de un contrato de futuros","Cerrar un contrato de futuros próximo a vencer y abrir uno nuevo de vencimiento posterior, para mantener la posición","La entrega física del activo subyacente","El ajuste diario de márgenes"],c:1},
+  {p:"¿Qué es el margen inicial en futuros?",o:["El pago total del contrato","El depósito de garantía requerido para abrir una posición en futuros","El primer pago de dividendos","La prima de una opción"],c:1},
+  {p:"¿Qué es el ajuste diario (mark-to-market) en futuros?",o:["La valoración semanal de la cartera","El proceso diario de acreditar o debitar las ganancias o pérdidas de posiciones en futuros según el precio de cierre","La renovación del contrato","La entrega del subyacente"],c:1},
+  {p:"¿Qué es el 'in the money' en opciones?",o:["Una opción con valor temporal positivo","Una opción que tiene valor intrínseco: para un call, el precio del subyacente está por encima del strike; para un put, por debajo","Una opción con alta volatilidad","Una opción próxima al vencimiento"],c:1},
+  {p:"¿Qué es la volatilidad implícita en opciones?",o:["La volatilidad histórica del activo","La volatilidad futura esperada por el mercado, derivada del precio de las opciones","La varianza del activo subyacente","La beta del activo"],c:1},
+  {p:"¿Qué es el 'delta' de una opción?",o:["La sensibilidad del precio de la opción ante cambios en la tasa de interés","La sensibilidad del precio de la opción ante cambios en el precio del activo subyacente","La sensibilidad al tiempo","La sensibilidad a la volatilidad"],c:0},
+  {p:"¿Qué es el 'theta' de una opción?",o:["La sensibilidad al precio del subyacente","La tasa de pérdida de valor temporal de una opción a medida que pasa el tiempo","La sensibilidad a la volatilidad","La sensibilidad a la tasa de interés"],c:1},
+  {p:"¿Qué es el 'vega' de una opción?",o:["La sensibilidad al precio del subyacente","La sensibilidad del precio de la opción ante cambios en la volatilidad implícita","La sensibilidad al tiempo","La sensibilidad a la tasa"],c:1},
+  {p:"¿Qué es la paridad put-call?",o:["La igualdad de precios entre calls y puts","La relación de no arbitraje entre el precio de un call, un put con el mismo strike y vencimiento, el precio del subyacente y la tasa libre de riesgo","La correlación entre opciones","El equilibrio entre oferta y demanda de opciones"],c:1},
+  {p:"¿Qué es un bono convertible?",o:["Un bono que paga en dos monedas","Un bono que puede convertirse en acciones del emisor bajo ciertas condiciones","Un bono con opción de rescate anticipado","Un bono con cupón variable"],c:1},
+  {p:"¿Qué es una acción rescatable (callable)?",o:["Una acción que el emisor puede recomprar a un precio predeterminado","Un bono con cláusula de rescate anticipado a opción del emisor","Una opción de compra sobre acciones","Una acción preferida"],c:1},
+  {p:"¿Qué es la tasa BADLAR?",o:["La tasa de interés de los préstamos hipotecarios","La tasa de interés de depósitos a plazo fijo de más de un millón de pesos para bancos privados, usada como referencia","La tasa de la FED","La tasa de política monetaria del BCRA"],c:1},
+  {p:"¿Qué es el encaje bancario?",o:["El nivel de deuda de un banco","La proporción de depósitos que los bancos deben mantener como reserva, por exigencia del Banco Central","El capital mínimo regulatorio","El coeficiente de liquidez"],c:1},
+  {p:"¿Qué son las LELIQ?",o:["Letras del Tesoro Nacional","Letras de Liquidez del BCRA, instrumentos de corto plazo emitidos por el Banco Central para regular la liquidez","Letras municipales","Letras en dólares"],c:1},
+  {p:"¿Qué es el 'carry trade'?",o:["El transporte de activos físicos","La estrategia de endeudarse en una moneda de baja tasa e invertir en una de mayor tasa para obtener el diferencial","El arbitraje entre mercados","La reinversión de dividendos"],c:1},
+  {p:"¿Qué mide el ratio de Treynor?",o:["El rendimiento ajustado por riesgo total","El rendimiento en exceso de la tasa libre de riesgo por unidad de riesgo sistemático (beta)","La desviación estándar del portafolio","El VaR del portafolio"],c:1},
+  {p:"¿Qué es la convexidad de un bono?",o:["La curvatura de la relación precio-rendimiento, que complementa a la duration para estimar cambios de precio ante movimientos de tasas","La duración de un bono","El riesgo de crédito de un bono","La liquidez del bono en el mercado"],c:0},
+  {p:"¿Qué es el 'yield to maturity' (YTM)?",o:["El cupón anual del bono","La tasa de rendimiento que un inversor obtendría si mantiene el bono hasta el vencimiento y reinvierte todos los flujos a la misma tasa","El precio limpio del bono","La tasa libre de riesgo"],c:1},
+  {p:"¿Qué es un ETF (Exchange Traded Fund)?",o:["Un fondo de inversión no cotizable","Un fondo que replica un índice y cotiza en bolsa como una acción, combinando características de acciones y fondos","Un bono de renta variable","Un contrato de futuros sobre índice"],c:1},
+  {p:"¿Qué es la 'gestión activa' de portafolio?",o:["Replicar exactamente un índice de referencia","Buscar superar al benchmark mediante la selección de activos y timing de mercado","Invertir en fondos indexados","Mantener la cartera sin cambios"],c:1},
+  {p:"¿Qué es la 'gestión pasiva' de portafolio?",o:["No tomar ninguna decisión de inversión","Replicar un índice de referencia con el objetivo de obtener su rendimiento al menor costo posible","Invertir solo en renta fija","Rotar constantemente la cartera"],c:1},
+  {p:"¿Qué es la teoría de la hipótesis de mercado eficiente fuerte?",o:["El mercado refleja solo precios históricos","Ningún inversor puede obtener rendimientos superiores de forma consistente porque el mercado refleja toda la información, incluso privada","El mercado refleja solo información pública","Los mercados son siempre ineficientes"],c:1},
+  {p:"¿Qué es el ratio de endeudamiento (Debt to Equity)?",o:["La rentabilidad sobre activos","La proporción de deuda financiera respecto al patrimonio neto de una empresa","El costo de deuda","La cobertura de intereses"],c:1},
+  {p:"¿Qué es el capital de trabajo?",o:["El capital total de una empresa","La diferencia entre activos corrientes y pasivos corrientes, que mide la liquidez operativa","El patrimonio neto","El capital de largo plazo"],c:1},
+  {p:"¿Qué es la cobertura de intereses (interest coverage ratio)?",o:["La tasa de interés de la deuda","La relación EBIT / gastos financieros, que mide la capacidad de la empresa de pagar sus intereses","El costo de deuda","La rentabilidad operativa"],c:1},
+  {p:"¿Qué es el WACC (costo promedio ponderado de capital)?",o:["La tasa de interés bancaria","El costo promedio de las fuentes de financiamiento de una empresa, ponderado por su peso en la estructura de capital","La tasa libre de riesgo","El costo de la deuda"],c:1},
+  {p:"¿Qué es el modelo de descuento de dividendos (DDM)?",o:["Un modelo de análisis técnico","Un modelo de valuación de acciones que descuenta los dividendos futuros esperados a su valor presente","Un modelo de análisis de bonos","Un modelo de riesgo de crédito"],c:1},
+  {p:"¿Qué es el análisis de escenarios?",o:["El análisis de activos individuales","La evaluación del rendimiento de una inversión bajo diferentes hipótesis sobre variables clave (optimista, base, pesimista)","El análisis de sensibilidad a una sola variable","El análisis de correlaciones"],c:1},
+  {p:"¿Qué es el análisis de sensibilidad?",o:["La comparación de portafolios","El estudio de cómo varía el resultado de una inversión ante cambios en una variable clave, manteniendo las demás constantes","El análisis técnico de precios","El análisis de correlación entre activos"],c:1},
+  {p:"¿Qué es la 'prima de riesgo'?",o:["La comisión del asesor","El rendimiento adicional que exige un inversor por asumir riesgo por encima de la tasa libre de riesgo","El costo de una opción","El spread de crédito"],c:1},
+  {p:"¿Cuál es la diferencia entre tasa nominal y tasa efectiva?",o:["Son siempre iguales","La tasa efectiva incorpora la capitalización de intereses en el período; la nominal no","La tasa nominal siempre es mayor","La tasa efectiva se usa solo en bonos"],c:1},
+  {p:"¿Qué es la capitalización de intereses?",o:["La distribución de dividendos","El proceso por el cual los intereses generados se suman al capital para generar intereses adicionales en períodos futuros","La amortización de deuda","El pago de cupones"],c:1},
+  {p:"¿Qué es el interés simple?",o:["Interés que se capitaliza","El cálculo de intereses solo sobre el capital inicial, sin capitalización de intereses","El interés de los plazos fijos","El interés de los bonos"],c:1},
+  {p:"¿Qué es un 'swap' de divisas?",o:["Una compra al contado de divisas","Un acuerdo para intercambiar flujos de caja en distintas monedas en fechas futuras","Una opción sobre tipo de cambio","Un contrato de futuros de divisas"],c:1},
+  {p:"¿Qué es el riesgo operacional?",o:["El riesgo de crédito","El riesgo de pérdidas derivadas de fallas en procesos internos, personas, sistemas o eventos externos","El riesgo de mercado","El riesgo de liquidez"],c:1},
+  {p:"¿Qué es el riesgo legal?",o:["El riesgo de sanciones penales","El riesgo de pérdidas por incumplimientos contractuales, demandas legales o cambios en la regulación","El riesgo operacional","El riesgo reputacional"],c:1},
+  {p:"¿Qué son los bonos 'amortizables'?",o:["Bonos que se pagan de una sola vez al vencimiento","Bonos que devuelven el capital en cuotas durante la vida del instrumento","Bonos convertibles en acciones","Bonos con opciones de rescate"],c:1},
+  {p:"¿Qué son los bonos 'bullet'?",o:["Bonos de muy corto plazo","Bonos que devuelven todo el capital al vencimiento, pagando solo cupones durante su vida","Bonos con amortización anticipada","Bonos indexados"],c:1},
+  {p:"¿Qué es el 'haircut' en el contexto de garantías?",o:["El recorte del precio de compra de un bono","El descuento aplicado al valor de mercado de un activo al usarlo como garantía, para cubrir el riesgo de fluctuación","La comisión de custodia","El ajuste por inflación"],c:1},
+  {p:"¿Qué es la titulización (securitización) de activos?",o:["La emisión de acciones ordinarias","El proceso de convertir activos ilíquidos (créditos, hipotecas) en valores negociables mediante un fideicomiso financiero","La compra de bonos del Estado","La inversión en bienes raíces"],c:1},
+  {p:"¿Qué son los activos 'subprime'?",o:["Activos de alta calidad crediticia","Activos o préstamos otorgados a deudores con baja calificación crediticia y mayor riesgo de incumplimiento","Activos sin calificación","Activos de países emergentes"],c:1},
+  {p:"¿Qué es el 'default' soberano?",o:["Una baja en la calificación crediticia","El incumplimiento de pago de deuda soberana por parte del Estado","Una restructuración voluntaria de deuda","La mora técnica por problemas operativos"],c:1},
+  {p:"¿Qué es la reestructuración de deuda?",o:["La emisión de nueva deuda","Un proceso de renegociación de los términos de deuda existente (plazo, tasa, quita) entre el deudor y sus acreedores","El pago anticipado de deuda","La cancelación total de deuda"],c:1},
+  {p:"¿Qué es una agencia calificadora de riesgo?",o:["Un organismo regulador","Una empresa especializada en evaluar la capacidad de pago de emisores y asignar calificaciones crediticias","Un fondo de inversión","Un banco de inversión"],c:1},
+  {p:"¿Qué es el 'spread' de crédito?",o:["La diferencia entre precio de compra y venta","La diferencia de rendimiento entre un bono con riesgo de crédito y un bono libre de riesgo de igual plazo","El margen del broker","El diferencial cambiario"],c:1},
+  {p:"¿Qué es el 'basis risk'?",o:["El riesgo de variación del precio spot","El riesgo de que la relación entre el precio del instrumento de cobertura y el activo cubierto varíe inesperadamente","El riesgo del mercado en general","El riesgo de crédito de la contraparte"],c:1},
+  {p:"¿Qué es el 'short selling' o venta en descubierto?",o:["La venta de acciones propias","La venta de valores que no se poseen, tomados en préstamo, con la expectativa de recomprarlos a menor precio","Una venta a plazo","Una operación de caución"],c:1},
+  {p:"¿Qué es un 'hedge fund'?",o:["Un fondo de cobertura regulado como FCI","Un fondo de inversión alternativo con estrategias complejas (short, apalancamiento, derivados), generalmente para inversores calificados","Un fondo indexado","Un fondo de pensión"],c:1},
+  {p:"¿Qué es el 'private equity'?",o:["La inversión en acciones que cotizan en bolsa","La inversión en empresas que no cotizan en mercados públicos, con horizontes de largo plazo","Un fondo de bonos privados","Un ETF de acciones pequeñas"],c:1},
+  {p:"¿Qué es el 'venture capital'?",o:["El capital de trabajo de una empresa","La inversión en empresas en etapas tempranas o de alto crecimiento (startups) a cambio de participación accionaria","Un préstamo bancario a startups","Una emisión de ON para pymes"],c:1},
+  {p:"¿Qué es el 'Crowdfunding' o financiamiento colectivo?",o:["Un bono de inversión masiva","Un modelo de financiamiento donde múltiples pequeños inversores aportan capital a proyectos o empresas a través de plataformas digitales","Un FCI para pequeños inversores","Una obligación negociable PYME"],c:1},
+  {p:"¿Qué son los Valores Negociables PyME?",o:["Acciones de empresas grandes","Instrumentos de deuda o capital creados por la CNV para facilitar el acceso de las PyMEs al mercado de capitales","Bonos del Estado para PyMEs","Cheques de pago diferido únicamente"],c:1},
+  {p:"¿Qué es el régimen simplificado de oferta pública para PyMEs?",o:["Un régimen impositivo especial","Un régimen de la CNV con menores requisitos de información para facilitar el acceso de PyMEs al mercado de capitales","Un subsidio del Estado","Un tipo de crédito bancario"],c:1},
+  {p:"¿Qué es la Bolsa de Comercio de Buenos Aires (BCBA)?",o:["El Banco Central de Argentina","La institución que históricamente organizó la negociación bursátil en Argentina, hoy integrada al Mercado Argentino de Valores (MAV)","La CNV","El Ministerio de Finanzas"],c:1},
+  {p:"¿Qué es el Mercado Abierto Electrónico (MAE)?",o:["Un mercado de acciones electrónico","El mercado mayorista donde se negocian principalmente títulos públicos y divisas entre instituciones financieras","Un mercado de futuros","Un mercado de commodities"],c:1},
+  {p:"¿Qué es BYMA (Bolsas y Mercados Argentinos)?",o:["El Banco Central","La principal bolsa de valores de Argentina, resultado de la fusión entre BCBA y otros mercados","La CNV","Un fondo de inversión estatal"],c:1},
+  {p:"¿Qué es el Mercado a Término de Rosario (MATBA-ROFEX)?",o:["Un mercado de acciones de Rosario","El principal mercado de futuros y opciones de Argentina, especializado en productos agropecuarios y financieros","Un mercado de bonos regionales","Una bolsa de comercio"],c:1},
+  {p:"¿Qué son los Títulos Públicos Nacionales?",o:["Acciones emitidas por el Estado","Instrumentos de deuda emitidos por el Estado Nacional para financiarse, como bonos y letras del Tesoro","Fideicomisos estatales","Acciones de empresas del Estado"],c:1},
+  {p:"¿Qué es el Fondo de Garantía de Sustentabilidad (FGS) de ANSES?",o:["Un seguro de depósitos","El fondo de reservas del sistema previsional argentino, que invierte en activos financieros","Un fondo de emergencia fiscal","Un fondo de inversión privado"],c:1},
+  {p:"¿Qué es la inversión ESG?",o:["Inversión en energía, servicios y gastronomía","Inversión que considera criterios ambientales (Environmental), sociales (Social) y de gobernanza (Governance)","Inversión en mercados emergentes","Inversión especulativa de corto plazo"],c:1},
+  {p:"¿Qué es el análisis FODA?",o:["Un análisis técnico de precios","El análisis de Fortalezas, Oportunidades, Debilidades y Amenazas de una empresa o estrategia","Un análisis macroeconómico","Un análisis de cartera"],c:1},
+  {p:"¿Qué es el 'payout ratio'?",o:["La rentabilidad sobre activos","La proporción de las ganancias de una empresa que se distribuye como dividendos","El ratio de deuda","El margen neto"],c:1},
+  {p:"¿Qué es el 'free float' de una acción?",o:["El precio mínimo de la acción","La porción del capital de una empresa que está disponible para ser negociada en el mercado público","El número total de acciones emitidas","Las acciones en tesorería"],c:1},
+  {p:"¿Qué es un 'stock split'?",o:["La fusión de acciones","La división de las acciones existentes en un mayor número de acciones, reduciendo el precio unitario proporcionalforme","La emisión de nuevas acciones","La recompra de acciones"],c:1},
+  {p:"¿Qué es la recompra de acciones (buyback)?",o:["La venta de acciones propias al mercado","La compra por parte de la propia empresa de sus acciones en circulación","La emisión de nuevas acciones","El rescate de bonos"],c:1},
+  {p:"¿Qué es el 'earnings per share' (EPS)?",o:["El precio de la acción","La ganancia neta de la empresa dividida por la cantidad de acciones en circulación","El dividendo por acción","El valor libro por acción"],c:1},
+  {p:"¿Qué es el ratio EV/EBITDA?",o:["El precio sobre ganancias","La relación entre el Enterprise Value (valor de la empresa) y su EBITDA, usada para comparar valoraciones entre empresas","La deuda sobre el patrimonio","El capital sobre los activos"],c:1},
+  {p:"¿Qué es el 'Enterprise Value' (EV)?",o:["El precio de mercado de las acciones","El valor total de la empresa que incluye capitalización bursátil más deuda neta menos caja","El patrimonio neto","Los activos totales"],c:1},
+  {p:"¿Qué es la amortización en contabilidad?",o:["El pago de dividendos","La distribución sistemática del costo de un activo intangible a lo largo de su vida útil","El costo de ventas","Los intereses de la deuda"],c:1},
+  {p:"¿Qué es la depreciación?",o:["La pérdida de valor de una empresa","La distribución sistemática del costo de un activo tangible a lo largo de su vida útil","La inflación de costos","La pérdida de mercado"],c:1},
+  {p:"¿Qué es el EBIT?",o:["EBITDA menos amortización","Las ganancias antes de intereses e impuestos (Earnings Before Interest and Taxes)","Las ganancias netas de la empresa","El flujo de caja operativo"],c:1},
+  {p:"¿Qué es el margen EBITDA?",o:["EBITDA sobre activos totales","EBITDA como porcentaje de los ingresos, mide la rentabilidad operativa","EBITDA sobre deuda","EBITDA sobre patrimonio"],c:1},
+  {p:"¿Qué es el 'goodwill' o plusvalía?",o:["Los activos tangibles de la empresa","El valor intangible pagado en una adquisición por encima del valor de los activos netos identificables","Las marcas registradas","Los contratos a largo plazo"],c:1},
+  {p:"¿Qué es el análisis de comparables (comps)?",o:["El análisis de bonos similares","La valuación de una empresa comparando sus ratios con los de empresas similares del mismo sector","El análisis histórico de la empresa","El análisis de sensibilidad"],c:1},
+  {p:"¿Qué es la valuación por DCF (Discounted Cash Flow)?",o:["La comparación con empresas similares","La estimación del valor de una empresa descontando sus flujos de caja futuros a una tasa de descuento apropiada","La valuación por precio de libros","La valuación por transacciones comparables"],c:1},
+  {p:"¿Qué es la tasa libre de riesgo en el contexto argentino?",o:["La tasa de los plazos fijos","Generalmente se toma la tasa de los bonos del Tesoro de EE.UU. (Treasury) u otro activo considerado sin riesgo de crédito","La tasa BADLAR","La tasa de política monetaria"],c:1},
+  {p:"¿Qué es el riesgo soberano?",o:["El riesgo de las empresas privadas","El riesgo de que un gobierno no pueda o no quiera cumplir con sus obligaciones de deuda","El riesgo cambiario","El riesgo de inflación"],c:1},
+  {p:"¿Qué es una obligación subordinada?",o:["Una deuda con garantía real","Una obligación que, en caso de liquidación del emisor, se cobra después de la deuda senior pero antes que el capital","Una deuda garantizada","Un bono senior"],c:1},
+  {p:"¿Qué es la prelación de cobro en caso de quiebra?",o:["Los accionistas cobran primero","El orden de prioridad: acreedores garantizados, acreedores quirografarios, deuda subordinada y por último los accionistas","Todos los acreedores cobran igual","El Estado cobra primero que todos"],c:1},
+  {p:"¿Qué es el 'cupón corrido' de un bono?",o:["El próximo cupón a pagar","El interés devengado desde el último pago hasta la fecha actual, que se suma al precio limpio para obtener el precio sucio","El cupón total del bono","El cupón con ajuste CER"],c:1},
+  {p:"¿Qué es la tasa de reinversión y cómo afecta al YTM?",o:["No afecta al YTM","El YTM asume que los cupones se reinvierten a la misma tasa; si la tasa real de reinversión difiere, el rendimiento real será distinto","Siempre es mayor que el YTM","La tasa de reinversión fija el precio del bono"],c:1},
+  {p:"¿Qué son los 'bonos soberanos en moneda extranjera'?",o:["Bonos corporativos emitidos en el exterior","Deuda del Estado emitida en dólares u otra divisa, lo que agrega riesgo cambiario para el emisor","Bonos ajustados por tipo de cambio","Bonos en pesos comprados por extranjeros"],c:1},
+  {p:"¿Qué es la estrategia de 'laddering' en renta fija?",o:["Concentrar en bonos de un solo plazo","Distribuir la inversión en bonos de distintos vencimientos escalonados para gestionar el riesgo de tasa y de reinversión","Invertir solo en bonos de largo plazo","Rotar entre bonos de tasa fija y variable"],c:1},
+  {p:"¿Qué es el 'immunization' de portafolio de renta fija?",o:["La cobertura de riesgo cambiario","Una estrategia que busca proteger el valor del portafolio de cambios en las tasas de interés igualando la duration del activo con el pasivo","La diversificación entre sectores","La cobertura mediante opciones"],c:1},
+  {p:"¿Qué es el Active Return de un portafolio?",o:["El rendimiento total del portafolio","La diferencia entre el rendimiento del portafolio y el rendimiento de su benchmark","El rendimiento ajustado por riesgo","El rendimiento libre de riesgo"],c:1},
+  {p:"¿Qué es el Information Ratio?",o:["El ratio de Sharpe modificado","La relación entre el Active Return y el Tracking Error, que mide la eficiencia de la gestión activa","El ratio de Treynor","El alfa sobre el beta"],c:1},
+  {p:"¿Qué es el 'momentum investing'?",o:["Invertir en activos subvalorados","Estrategia basada en la idea de que activos que han subido seguirán subiendo y los que han bajado seguirán bajando","Invertir en activos de alta calidad","Invertir en activos de baja volatilidad"],c:1},
+  {p:"¿Qué es la 'reversión a la media'?",o:["Que los precios siempre suben en el largo plazo","La tendencia de una variable a volver a su valor promedio histórico después de desviarse","Que las ganancias siempre se mantienen constantes","Que los bonos siempre rinden lo mismo"],c:1},
+  {p:"¿Qué es el 'factor investing'?",o:["Invertir en índices amplios","Una estrategia que busca exposición a factores de riesgo específicos (valor, tamaño, momentum, calidad) que históricamente han generado retornos superiores","Invertir en fondos activos","La selección de acciones por análisis fundamental"],c:1},
+  {p:"¿Qué implica el principio de 'neutralidad' del asesor?",o:["No dar ninguna recomendación","Actuar sin favoritismos y siempre en el mejor interés del cliente, sin dejarse influir por conflictos de interés personales","Ofrecer siempre el mismo producto","No cobrar comisiones"],c:1},
+  {p:"¿Cuándo es obligatorio actualizar el perfil de riesgo del cliente?",o:["Cada 5 años","Cuando el cliente lo solicite o cuando se produzcan cambios significativos en su situación financiera u objetivos","Solo al inicio de la relación","Nunca, si firmó los documentos al inicio"],c:1},
+  {p:"¿Qué es una inversión 'apta' para un inversor?",o:["Cualquier inversión que esté regulada","Una inversión coherente con el perfil de riesgo, objetivos, horizonte temporal y situación financiera del inversor","La inversión de mayor rendimiento disponible","La inversión que el agente prefiere"],c:1},
+  {p:"¿Qué es la obligación de 'best interest' en la relación con el cliente?",o:["Dar el mejor precio disponible","Siempre actuar en el mejor interés del cliente, priorizando sus objetivos sobre los intereses del agente","Ofrecer siempre el producto más rentable","Recomendar el producto con mayor liquidez"],c:1},
+  {p:"¿Qué es la 'responsabilidad de supervisión' en una entidad?",o:["La responsabilidad de los directivos de supervisar las actividades de sus subordinados para prevenir y detectar infracciones","La auditoría externa","La regulación interna de comisiones","El control de riesgos operativos"],c:0},
+  {p:"¿Qué sanción puede aplicar la CNV por insider trading?",o:["Solo una advertencia","Multas, inhabilitación para operar y puede derivar en causas penales","Solo suspensión temporal","Solo amonestación privada"],c:1},
+  {p:"¿Qué es la 'due diligence' en inversiones?",o:["La auditoría contable de una empresa","El proceso de investigación exhaustiva antes de realizar una inversión para verificar la información y evaluar los riesgos","El proceso de calificación crediticia","El análisis técnico de precios"],c:1},
+  {p:"¿Cuál es el plazo máximo de un cheque de pago diferido negociable en Argentina?",o:["180 días","360 días","90 días","540 días"],c:1},
+  {p:"¿Qué es el mercado de letras del BCRA?",o:["El mercado donde el Estado vende letras del Tesoro","El mercado donde el Banco Central emite y rescata sus propias letras (LELIQ, NOTALIQ) para regular la liquidez","Un mercado de renta variable","Un mercado de divisas"],c:1},
+  {p:"¿Qué es la colocación primaria de valores?",o:["La reventa de valores ya emitidos","La venta inicial de nuevos valores por parte del emisor a los inversores, en el mercado primario","El rescate de bonos","La fusión de emisiones"],c:1},
+  {p:"¿Qué es el Registro de Acceso de Público (RAP) de la CNV?",o:["El sistema de registro de operaciones sospechosas","El sistema donde los emisores y agentes registran información que es pública para los inversores","El registro de clientes del mercado","El sistema de información del BCRA"],c:1},
+  {p:"¿Qué es el 'lock-up period' en una IPO?",o:["El período mínimo de inversión obligatorio","El período posterior a la IPO durante el cual los accionistas insiders no pueden vender sus acciones","El período de colocación de la oferta","El plazo de liquidación"],c:1},
+  {p:"¿Qué es el 'greenshoe' en una IPO?",o:["Una opción de venta anticipada","Una opción que permite al colocador emitir acciones adicionales (hasta un 15% más) si la demanda supera la oferta, para estabilizar el precio","Un mecanismo de recompra","Una cláusula de rescate anticipado"],c:1},
+];
+
+// Estado del examen
+let preguntasExamen = [];
+let respuestas = [];
+let preguntaActual = 0;
+let timerInterval = null;
+let tiempoSegundos = 90 * 60;
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function iniciarExamen() {
+  const mezcladas = shuffleArray(BANCO_PREGUNTAS);
+  preguntasExamen = mezcladas.slice(0, 60);
+  respuestas = new Array(60).fill(null);
+  preguntaActual = 0;
+  tiempoSegundos = 90 * 60;
+
+  document.getElementById('pantalla-inicio').style.display = 'none';
+  document.getElementById('pantalla-resultados').style.display = 'none';
+  document.getElementById('pantalla-examen').style.display = 'block';
+
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    tiempoSegundos--;
+    actualizarTimer();
+    if (tiempoSegundos <= 0) { clearInterval(timerInterval); finalizarExamen(); }
+  }, 1000);
+
+  mostrarPregunta();
+}
+
+function actualizarTimer() {
+  const m = Math.floor(tiempoSegundos / 60).toString().padStart(2,'0');
+  const s = (tiempoSegundos % 60).toString().padStart(2,'0');
+  const el = document.getElementById('tiempo-display');
+  el.textContent = `${m}:${s}`;
+  el.style.color = tiempoSegundos < 300 ? '#e74c3c' : '';
+}
+
+function mostrarPregunta() {
+  const q = preguntasExamen[preguntaActual];
+  const respondidas = respuestas.filter(r => r !== null).length;
+
+  document.getElementById('num-actual').textContent = preguntaActual + 1;
+  document.getElementById('label-pregunta').textContent = `PREGUNTA ${preguntaActual + 1} / 60`;
+  document.getElementById('texto-pregunta').textContent = q.p;
+  document.getElementById('respondidas-texto').textContent = `${respondidas}/60 respondidas`;
+  document.getElementById('barra-progreso').style.width = `${((preguntaActual + 1) / 60) * 100}%`;
+
+  const opcContainer = document.getElementById('opciones-container');
+  opcContainer.innerHTML = '';
+  const letras = ['A','B','C','D'];
+  q.o.forEach((opc, i) => {
+    const div = document.createElement('div');
+    div.className = 'opcion';
+    div.innerHTML = `<span class="letra-opcion">${letras[i]}</span><span>${opc}</span>`;
+    if (respuestas[preguntaActual] !== null) {
+      div.classList.add('bloqueada');
+      if (i === respuestas[preguntaActual]) {
+        div.classList.add(i === q.c ? 'correcta' : 'incorrecta');
+      } else if (i === q.c) {
+        div.classList.add('mostrar-correcta');
+      }
+    } else {
+      div.onclick = () => seleccionarRespuesta(i);
+    }
+    opcContainer.appendChild(div);
+  });
+
+  const feedback = document.getElementById('feedback');
+  if (respuestas[preguntaActual] !== null) {
+    feedback.className = 'feedback ' + (respuestas[preguntaActual] === q.c ? 'correcto' : 'incorrecto');
+    feedback.textContent = respuestas[preguntaActual] === q.c
+      ? '✓ ¡Correcto!'
+      : `✗ Incorrecto. La respuesta correcta es: ${letras[q.c]}) ${q.o[q.c]}`;
+  } else {
+    feedback.className = 'feedback';
+  }
+
+  document.getElementById('btn-anterior').style.visibility = preguntaActual > 0 ? 'visible' : 'hidden';
+  const btnSig = document.getElementById('btn-siguiente');
+  if (preguntaActual === 59) {
+    btnSig.textContent = 'Ver Resultados →';
+    btnSig.onclick = finalizarExamen;
+  } else {
+    btnSig.textContent = 'Siguiente →';
+    btnSig.onclick = irSiguiente;
+  }
+}
+
+function seleccionarRespuesta(idx) {
+  if (respuestas[preguntaActual] !== null) return;
+  respuestas[preguntaActual] = idx;
+  mostrarPregunta();
+}
+
+function irSiguiente() {
+  if (preguntaActual < 59) { preguntaActual++; mostrarPregunta(); }
+}
+function irAnterior() {
+  if (preguntaActual > 0) { preguntaActual--; mostrarPregunta(); }
+}
+
+function finalizarExamen() {
+  if (timerInterval) clearInterval(timerInterval);
+
+  let correctas = 0;
+  const errores = [];
+  const letras = ['A','B','C','D'];
+
+  preguntasExamen.forEach((q, i) => {
+    if (respuestas[i] === q.c) {
+      correctas++;
+    } else {
+      errores.push({ pregunta: q.p, opciones: q.o, correcta: q.c, tuRespuesta: respuestas[i] });
+    }
+  });
+
+  const sinResponder = respuestas.filter(r => r === null).length;
+  const incorrectas = 60 - correctas - sinResponder;
+  const pct = Math.round((correctas / 60) * 100);
+  const aprobado = pct >= 75;
+
+  document.getElementById('pantalla-examen').style.display = 'none';
+  document.getElementById('pantalla-resultados').style.display = 'block';
+
+  const circulo = document.getElementById('score-circulo');
+  circulo.className = 'score-circulo ' + (aprobado ? 'aprobado' : 'desaprobado');
+  document.getElementById('score-porcentaje').textContent = pct + '%';
+  document.getElementById('resultado-titulo').textContent = aprobado ? '¡Examen Aprobado! 🎉' : 'Examen Desaprobado';
+  document.getElementById('resultado-subtitulo').textContent = aprobado
+    ? `Superaste el umbral del 75%. ¡Excelente preparación!`
+    : `Necesitás el 75% para aprobar. ¡Seguí practicando!`;
+
+  document.getElementById('stat-correctas').textContent = correctas;
+  document.getElementById('stat-incorrectas').textContent = incorrectas;
+  document.getElementById('stat-sin-resp').textContent = sinResponder;
+
+  const listaErrores = document.getElementById('lista-errores');
+  if (errores.length === 0) {
+    listaErrores.innerHTML = '<div class="sin-errores">🏆 ¡Sin errores! Respondiste todo correctamente.</div>';
+  } else {
+    listaErrores.innerHTML = errores.map((e, i) => `
+      <div class="error-item">
+        <div class="error-pregunta"><strong>${i+1}.</strong> ${e.pregunta}</div>
+        ${e.tuRespuesta !== null
+          ? `<div class="error-tu-resp">Tu respuesta: <strong>${letras[e.tuRespuesta]}) ${e.opciones[e.tuRespuesta]}</strong></div>`
+          : `<div class="error-tu-resp" style="color:#aaa">Sin responder</div>`}
+        <div class="error-correcta">Respuesta correcta: <strong>${letras[e.correcta]}) ${e.opciones[e.correcta]}</strong></div>
+      </div>
+    `).join('');
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function volverInicio() {
+  if (timerInterval) clearInterval(timerInterval);
+  document.getElementById('pantalla-resultados').style.display = 'none';
+  document.getElementById('pantalla-inicio').style.display = 'flex';
+}
+</script>
+</body>
+</html>
