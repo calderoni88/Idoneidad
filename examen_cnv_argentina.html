@@ -328,6 +328,89 @@
     font-size: 1rem;
   }
 
+  /* ===== BOTÓN VIDEO FLOTANTE ===== */
+  .btn-video-flotante {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--dorado);
+    color: var(--azul);
+    border: none;
+    border-radius: 30px;
+    padding: 0.55rem 1.1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(201,168,76,0.4);
+    transition: all 0.2s;
+  }
+  .btn-video-flotante:hover { background: var(--dorado-claro); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.5); }
+  .btn-video-flotante .icono { font-size: 1rem; }
+
+  /* ===== MODAL VIDEO ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 15, 30, 0.92);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-overlay.abierto { display: flex; }
+  .modal-video {
+    background: var(--azul-medio);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 16px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 860px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.3rem;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .modal-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--dorado);
+    font-weight: 700;
+  }
+  .btn-cerrar-modal {
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: var(--blanco);
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.18s;
+  }
+  .btn-cerrar-modal:hover { background: rgba(255,255,255,0.18); }
+  .modal-video-wrap {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+  }
+  .modal-video-wrap video {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+
   @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
   @keyframes slideIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
 
@@ -339,6 +422,51 @@
 </style>
 </head>
 <body>
+
+<!-- ===== BOTONES FLOTANTES ===== -->
+<button class="btn-video-flotante" style="position:fixed;top:1rem;right:1rem;z-index:999;" onclick="abrirVideo()">
+  <span class="icono">▶</span> Guía del Examen
+</button>
+<button class="btn-video-flotante" style="position:fixed;top:3.5rem;right:1rem;z-index:999;background:#1a3a5c;color:var(--dorado);border:1.5px solid var(--dorado);" onclick="abrirPodcast()">
+  <span class="icono">🎧</span> Podcast
+</button>
+
+<!-- ===== MODAL VIDEO ===== -->
+<div class="modal-overlay" id="modal-video" onclick="cerrarVideoFuera(event)">
+  <div class="modal-video">
+    <div class="modal-header">
+      <span class="modal-titulo">📹 Guía — Examen de Idoneidad CNV</span>
+      <button class="btn-cerrar-modal" onclick="cerrarVideo()">✕</button>
+    </div>
+    <div class="modal-video-wrap">
+      <video id="video-guia" controls controlsList="nodownload">
+        <source src="https://raw.githubusercontent.com/Calderoni88/Idoneidad/main/Guía__Examen_Idoneidad_CNV.mp4" type="video/mp4">
+        Tu navegador no soporta la reproducción de video.
+      </video>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL PODCAST ===== -->
+<div class="modal-overlay" id="modal-podcast" onclick="cerrarPodcastFuera(event)">
+  <div class="modal-video" style="max-width:560px;">
+    <div class="modal-header">
+      <span class="modal-titulo">🎧 Podcast — Claves del Examen de Idoneidad CNV</span>
+      <button class="btn-cerrar-modal" onclick="cerrarPodcast()">✕</button>
+    </div>
+    <div style="padding:2rem;display:flex;flex-direction:column;align-items:center;gap:1.2rem;">
+      <div style="width:90px;height:90px;background:var(--dorado);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;box-shadow:0 0 0 10px rgba(201,168,76,0.15);">🎧</div>
+      <div style="text-align:center;">
+        <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--blanco);margin-bottom:0.3rem;">Claves del Examen de Idoneidad CNV</div>
+        <div style="font-size:0.8rem;color:rgba(248,246,241,0.5);">Audio educativo — Preparación para el examen</div>
+      </div>
+      <audio id="audio-podcast" controls style="width:100%;accent-color:var(--dorado);">
+        <source src="https://raw.githubusercontent.com/Calderoni88/Idoneidad/main/Claves_del_examen_de_idoneidad_CNV.m4a" type="audio/mp4">
+        Tu navegador no soporta la reproducción de audio.
+      </audio>
+    </div>
+  </div>
+</div>
 
 <!-- ===== INICIO ===== -->
 <div id="pantalla-inicio">
@@ -840,6 +968,32 @@ function volverInicio() {
   if (timerInterval) clearInterval(timerInterval);
   document.getElementById('pantalla-resultados').style.display = 'none';
   document.getElementById('pantalla-inicio').style.display = 'flex';
+}
+
+function abrirVideo() {
+  document.getElementById('modal-video').classList.add('abierto');
+}
+function cerrarVideo() {
+  document.getElementById('modal-video').classList.remove('abierto');
+  const v = document.getElementById('video-guia');
+  v.pause();
+  v.currentTime = 0;
+}
+function cerrarVideoFuera(e) {
+  if (e.target === document.getElementById('modal-video')) cerrarVideo();
+}
+
+function abrirPodcast() {
+  document.getElementById('modal-podcast').classList.add('abierto');
+}
+function cerrarPodcast() {
+  document.getElementById('modal-podcast').classList.remove('abierto');
+  const a = document.getElementById('audio-podcast');
+  a.pause();
+  a.currentTime = 0;
+}
+function cerrarPodcastFuera(e) {
+  if (e.target === document.getElementById('modal-podcast')) cerrarPodcast();
 }
 </script>
 </body>
